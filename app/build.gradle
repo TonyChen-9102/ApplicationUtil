@@ -1,0 +1,48 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 29
+    defaultConfig {
+        applicationId "com.demo.ck.applicationinfo1"
+        minSdkVersion 22
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+    }
+
+    //配置应用的签名信息
+    signingConfigs {
+        release {
+            storeFile file("${rootProject.rootDir.absolutePath}/Tank.key")
+            keyAlias 'tank'
+            keyPassword '198739zkl'
+            storePassword '198739zkl'
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            //是否混淆
+            minifyEnabled true
+            //移除无用的资源文件,这个东西依赖于minifyEnabled，所以minifyEnabled也要为true才行
+            shrinkResources true
+            //zip对齐
+            zipAlignEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+}
