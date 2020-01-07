@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.AdaptiveIconDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -50,10 +52,31 @@ public class ApplicationInfoUtil {
             applicationInfo = packageManager.getApplicationInfo(
                     context.getPackageName(), 0);
             Drawable d = packageManager.getApplicationIcon(applicationInfo); //xxx根据自己的情况获取drawable
-            BitmapDrawable bd = (BitmapDrawable) d;
-            Bitmap bm = bd.getBitmap();
+            Bitmap bm = null;
+            if (d instanceof BitmapDrawable) {
+                bm = ((BitmapDrawable) d).getBitmap();
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if (d instanceof AdaptiveIconDrawable) {
+                    int j = d.getIntrinsicWidth();
+                    int k = d.getIntrinsicHeight();
+                    int i = j;
+                    if (j <= 0) {
+                        i = 1;
+                    }
+                    j = k;
+                    if (k <= 0) {
+                        j = 1;
+                    }
+                    bm = Bitmap.createBitmap(i, j, Bitmap.Config.ARGB_8888);
+                    Canvas canvas = new Canvas(bm);
+                    d.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+                    d.draw(canvas);
+                }
+            }
+
             return bm;
         } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
         }
         return null;
     }

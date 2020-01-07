@@ -111,7 +111,12 @@ public class PackageInfoUtil {
     public static Long getVersionCode(@NonNull Context context) {
         PackageInfo packageInfo = getPackageInfo(context, 0);
         if (packageInfo != null) {
-            return packageInfo.getLongVersionCode();
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                return packageInfo.getLongVersionCode();
+            } else {
+                return Long.valueOf(packageInfo.versionCode);
+            }
+
         } else {
             return null;
         }
@@ -193,6 +198,7 @@ public class PackageInfoUtil {
 
     /**
      * 获取已安装的 app列表
+     *
      * @param context
      * @return
      */
