@@ -26,7 +26,8 @@ public class MainActivity extends AppCompatActivity {
         tvVersionName = findViewById(R.id.tvVersionName);
         tvVersionCode = findViewById(R.id.tvVersionCode);
         tvPackageName = findViewById(R.id.tvPackageName);
-
+        
+        //chenkaidd
         initView();
     }
 
